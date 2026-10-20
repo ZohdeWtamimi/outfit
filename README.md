@@ -1,5 +1,45 @@
-# Vue 3 + TypeScript + Vite
+# Outfit – Hoodie Maker 🧥
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Design your own custom hoodie right in the browser. Pick a color, upload your logo, place it on the front or back, and download your design.
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+## 🚀 Try it now
+
+**👉 [https://outfitjo.netlify.app](https://outfitjo.netlify.app)**
+
+No installation needed, just open the link and start designing.
+
+## ✨ Features
+
+- Choose from multiple hoodie colors (Burgundy, Navy, Black, Grey, Sky Blue)
+- Switch between front and back views
+- Upload your own logo (PNG, JPG, WebP, or SVG, up to 8 MB)
+- Drag the logo anywhere on the hoodie, or use the arrow keys for fine adjustment
+- Quick position presets (center, chest, upper back)
+- Adjust the logo size in centimeters
+- Download your finished design as an image
+- Arabic (RTL) interface
+
+## 🛠️ Run locally
+
+```bash
+git clone <your-repo-url>
+cd outfit
+npm install
+npm run dev
+```
+
+Then open the local URL shown in your terminal.
+
+## 🧰 Built with
+
+- [Vue 3](https://vuejs.org/) + TypeScript
+- [Vite](https://vitejs.dev/)
+- [Tailwind CSS](https://tailwindcss.com/)
+
+## 📬 Contact
+
+Questions or feedback? Reach out at zohdetamimi07@gmail.com
+
+---
+
+Made with ❤️ in Jordan
