@@ -3,7 +3,7 @@
         <div class="hb">
             <header class="top">
                 <div style="display: flex; align-items: center; gap: 10px; gap: 10px;justify-content: center; margin-top: 10px;">
-                    <h1 style="color: black;">Outfit</h1>
+                    <h1 style="color: black;font-family: cursive;">Outfit</h1>
                     <img :src="oImg" style="border-radius: 10px;"  width="40" height="40" alt="Outfit" />
                 </div>
             </header>
@@ -12,11 +12,11 @@
                 <!-- Preview -->
                 <section class="stage" aria-label="معاينة الهودي">
                     <div class="stage-top">
-                        <span class="colorname">{{ currentColor.name }}</span>
                         <div class="seg" role="group" aria-label="العرض">
                             <button type="button" :aria-pressed="view === 'front'" @click="view = 'front'">الواجهة</button>
                             <button type="button" :aria-pressed="view === 'back'" @click="view = 'back'">الخلفية</button>
                         </div>
+                        <span class="colorname">{{ currentColor.name }}</span>
                     </div>
 
                     <svg
