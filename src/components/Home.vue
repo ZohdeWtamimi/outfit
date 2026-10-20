@@ -2,8 +2,10 @@
     <div class="bg-white min-h-screen overflow-hidden" dir="rtl" lang="ar">
         <div class="hb">
             <header class="top">
-                <h1 style="color: brown;">صمم هودي الخاص بك</h1>
-                <p class="sub">اختر من 5 ألوان، ثم أضف شعارك إلى الصدر، الظهر، أو كليهما.</p>
+                <div style="display: flex; align-items: center; gap: 10px; gap: 10px;justify-content: center; margin-top: 10px;">
+                    <h1 style="color: black;">Outfit</h1>
+                    <img :src="oImg" style="border-radius: 10px;"  width="40" height="40" alt="Outfit" />
+                </div>
             </header>
 
             <div class="app">
@@ -80,31 +82,6 @@
                             <use href="#hb-hoodOpen" fill="#000" fill-opacity=".58" />
                             <use href="#hb-hoodOpen" fill="none" stroke="rgba(0,0,0,.4)" stroke-width="1.5" />
 
-                            <g
-                                v-if="slots.chest.src"
-                                class="logo"
-                                :class="{ drag: dragKey === 'chest' }"
-                                tabindex="0"
-                                role="img"
-                                aria-label="شعار الصدر. اسحبه أو استخدم الأسهم لتغيير موضعه."
-                                @pointerdown="onDown('chest', $event)"
-                                @pointermove="onMove('chest', $event)"
-                                @pointerup="onUp"
-                                @pointercancel="onUp"
-                                @keydown="onKey('chest', $event)"
-                            >
-                                <image
-                                    :href="slots.chest.src"
-                                    :x="boxes.chest.x"
-                                    :y="boxes.chest.y"
-                                    :width="boxes.chest.w"
-                                    :height="boxes.chest.h"
-                                    preserveAspectRatio="xMidYMid meet"
-                                />
-                                <rect class="sel selA" :x="boxes.chest.x - 3" :y="boxes.chest.y - 3" :width="boxes.chest.w + 6" :height="boxes.chest.h + 6" />
-                                <rect class="sel selB" :x="boxes.chest.x - 3" :y="boxes.chest.y - 3" :width="boxes.chest.w + 6" :height="boxes.chest.h + 6" />
-                            </g>
-
                             <g pointer-events="none">
                                 <path d="M184,122 C182,145 181,160 182,184" fill="none" stroke="#DAD6CB" stroke-width="2.8" stroke-linecap="round" />
                                 <path d="M216,122 C218,145 219,160 218,184" fill="none" stroke="#DAD6CB" stroke-width="2.8" stroke-linecap="round" />
@@ -138,47 +115,48 @@
                             <path d="M200,10 C201,50 199,100 200,143" fill="none" stroke="rgba(0,0,0,.24)" stroke-width="1.4" />
                             <path d="M150,70 C152,104 174,132 200,134" fill="none" stroke="rgba(0,0,0,.12)" stroke-width="3" stroke-linecap="round" />
 
-                            <g
-                                v-if="slots.back.src"
-                                class="logo"
-                                :class="{ drag: dragKey === 'back' }"
-                                tabindex="0"
-                                role="img"
-                                aria-label="شعار الظهر. اسحبه أو استخدم الأسهم لتغيير موضعه."
-                                @pointerdown="onDown('back', $event)"
-                                @pointermove="onMove('back', $event)"
-                                @pointerup="onUp"
-                                @pointercancel="onUp"
-                                @keydown="onKey('back', $event)"
-                            >
-                                <image
-                                    :href="slots.back.src"
-                                    :x="boxes.back.x"
-                                    :y="boxes.back.y"
-                                    :width="boxes.back.w"
-                                    :height="boxes.back.h"
-                                    preserveAspectRatio="xMidYMid meet"
-                                />
-                                <rect class="sel selA" :x="boxes.back.x - 3" :y="boxes.back.y - 3" :width="boxes.back.w + 6" :height="boxes.back.h + 6" />
-                                <rect class="sel selB" :x="boxes.back.x - 3" :y="boxes.back.y - 3" :width="boxes.back.w + 6" :height="boxes.back.h + 6" />
-                            </g>
-
                             <g pointer-events="none">
                                 <use href="#hb-sil" fill="url(#hb-shade)" />
                                 <use href="#hb-hoodB" fill="url(#hb-shade)" />
                             </g>
                         </g>
+
+                        <!-- LOGOS -->
+                        <template v-for="k in KEYS" :key="k">
+                            <g
+                                v-if="slots[k].src"
+                                v-show="view === CFG[k].view"
+                                class="logo"
+                                :class="{ drag: dragKey === k }"
+                                tabindex="0"
+                                @pointerdown="onDown(k, $event)"
+                                @pointermove="onMove(k, $event)"
+                                @pointerup="onUp"
+                                @pointercancel="onUp"
+                                @keydown="onKey(k, $event)"
+                                @click="onLogoClick(k, $event)"
+                            >
+                                <image
+                                    :href="slots[k].src!"
+                                    :x="boxes[k].x"
+                                    :y="boxes[k].y"
+                                    :width="boxes[k].w"
+                                    :height="boxes[k].h"
+                                    preserveAspectRatio="xMidYMid meet"
+                                />
+                                <g class="sel">
+                                    <rect class="selA" :x="boxes[k].x" :y="boxes[k].y" :width="boxes[k].w" :height="boxes[k].h" />
+                                    <rect class="selB" :x="boxes[k].x" :y="boxes[k].y" :width="boxes[k].w" :height="boxes[k].h" />
+                                </g>
+                            </g>
+                        </template>
                     </svg>
-                    <p class="stage-hint">اسحب الشعار لتحريكه. يتم عرض العرض بالسنتيمترات.</p>
+                    <button class="download-btn" v-if="hasDesign" @click="downloadImage">تنزيل التصميم</button>
                 </section>
 
                 <!-- Controls -->
                 <div class="panel">
-                    <section class="card" aria-labelledby="hb-h-color">
-                        <header class="card-h">
-                            <h2 id="hb-h-color">لون الهودي</h2>
-                            <span class="tag">5 ألوان</span>
-                        </header>
+                    <section class="card colors-swatches" aria-labelledby="hb-h-color">
                         <div class="swatches">
                             <button
                                 v-for="c in COLORS"
@@ -189,93 +167,63 @@
                                 @click="colorId = c.id"
                             >
                                 <span class="chip" :style="{ background: c.hex }"></span>
-                                <span>{{ c.name }}</span>
                             </button>
                         </div>
                     </section>
 
-                    <article
-                        v-for="k in KEYS"
-                        :key="k"
-                        class="card"
-                        :class="{ over: overKey === k }"
-                        :data-active="view === CFG[k].view"
-                        @dragover.prevent="overKey = k"
-                        @dragleave="overKey = null"
-                        @drop.prevent="onDrop(k, $event)"
-                        @focusin="view = CFG[k].view"
-                    >
-                        <header class="card-h">
-                            <h2>{{ CFG[k].title }}</h2>
-                            <span class="tag">{{ tagText(k) }}</span>
-                        </header>
-
-                        <div class="file">
-                            <div class="thumb">
-                                <img v-if="slots[k].src" :src="slots[k].src" alt="" />
-                            </div>
-                            <div class="fileinfo">
-                                <span class="fname">{{ slots[k].src ? slots[k].name : 'لا يوجد شعار في هذا الجانب' }}</span>
-                                <span class="meta" :class="{ warn: meta(k).warn }">{{ meta(k).text }}</span>
-                            </div>
-                            <div class="actions">
-                                <button type="button" class="btn primary" @click="inputs[k]?.click()">رفع الشعار</button>
-                                <button type="button" class="btn" :disabled="!slots[k].src" @click="removeLogo(k)">إزالة</button>
-                            </div>
-                        </div>
-                        <input
-                            :ref="(el) => setInput(k, el)"
-                            type="file"
-                            accept="image/png,image/jpeg,image/webp,image/svg+xml"
-                            hidden
-                            @change="onFile(k, $event)"
-                        />
-
-                        <div class="field">
-                            <span class="lbl">الموضع</span>
-                            <div class="seg" role="group" :aria-label="`${CFG[k].title} الموضع`">
-                                <button
-                                    v-for="(p, pk) in PRESETS[k]"
-                                    :key="pk"
-                                    type="button"
-                                    :disabled="!slots[k].src"
-                                    :aria-pressed="!!slots[k].src && slots[k].preset === pk"
-                                    @click="choosePreset(k, pk)"
-                                >
-                                    {{ p.label }}
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="field stretch">
-                            <label class="lbl" :for="`hb-size-${k}`">
-                                العرض <output>{{ slots[k].cm }} سم</output>
-                            </label>
+                    <template v-for="k in KEYS" :key="k">
+                        <article
+                            v-if="view === CFG[k].view"
+                            class="card"
+                            :class="{ over: overKey === k }"
+                            :data-active="view === CFG[k].view"
+                            @dragover.prevent="overKey = k"
+                            @dragleave="overKey = null"
+                            @drop.prevent="onDrop(k, $event)"
+                            @focusin="view = CFG[k].view"
+                        >
                             <input
-                                :id="`hb-size-${k}`"
-                                v-model.number="slots[k].cm"
-                                type="range"
-                                :min="CFG[k].min"
-                                :max="CFG[k].max"
-                                step="1"
-                                :disabled="!slots[k].src"
+                                :ref="(el) => setInput(k, el)"
+                                type="file"
+                                accept="image/png,image/jpeg,image/webp,image/svg+xml"
+                                hidden
+                                @change="onFile(k, $event)"
                             />
-                        </div>
 
-                        <p class="note" role="status">{{ notes[k] }}</p>
-                    </article>
+                            <div class="field">
+                                <span class="lbl">الموضع</span>
+                                <div class="seg" role="group" :aria-label="`${CFG[k].title} الموضع`">
+                                    <button
+                                        v-for="(p, pk) in PRESETS[k]"
+                                        :key="pk"
+                                        type="button"
+                                        :disabled="!slots[k].src"
+                                        :aria-pressed="!!slots[k].src && slots[k].preset === pk"
+                                        @click="choosePreset(k, pk)"
+                                    >
+                                        {{ p.label }}
+                                    </button>
+                                </div>
+                            </div>
 
-                    <section class="card" aria-labelledby="hb-h-sum">
-                        <header class="card-h">
-                            <h2 id="hb-h-sum">تصميمك</h2>
-                            <span class="tag">قسيمة الطلب</span>
-                        </header>
-                        <pre ref="slipEl" class="slip">{{ slipText }}</pre>
-                        <div class="copyrow">
-                            <button type="button" class="btn primary" @click="copyDetails">نسخ تفاصيل التصميم</button>
-                            <span class="status" role="status">{{ copyStatus }}</span>
-                        </div>
-                    </section>
+                            <div class="field stretch">
+                                <label class="lbl" :for="`hb-size-${k}`">
+                                    العرض <output>{{ slots[k].cm }} سم</output>
+                                </label>
+                                <input
+                                    :id="`hb-size-${k}`"
+                                    v-model.number="slots[k].cm"
+                                    type="range"
+                                    :min="CFG[k].min"
+                                    :max="CFG[k].max"
+                                    step="1"
+                                    :disabled="!slots[k].src"
+                                />
+                            </div>
+
+                            <p class="note" role="status">{{ notes[k] }}</p>
+                        </article>
+                    </template>
                 </div>
             </div>
         </div>
@@ -284,6 +232,7 @@
 
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue'
+import oImg from '../assets/o.png'
 
 type SlotKey = 'chest' | 'back'
 type View = 'front' | 'back'
@@ -320,11 +269,11 @@ interface SlotConfig {
 }
 
 const COLORS = [
-    { id: 'wine', name: 'نبيذي', hex: '#6B1F34' },
-    { id: 'navy', name: 'بحري', hex: '#1B2A49' },
-    { id: 'black', name: 'أسود', hex: '#17181A' },
-    { id: 'grey', name: 'رمادي', hex: '#8D939B' },
-    { id: 'sky', name: 'أزرق سماوي', hex: '#8EC5E8' },
+    { id: 'wine', name: 'Burgundy', hex: '#6B1F34' },
+    { id: 'navy', name: 'Navy', hex: '#1B2A49' },
+    { id: 'black', name: 'Black', hex: '#17181A' },
+    { id: 'grey', name: 'Grey', hex: '#8D939B' },
+    { id: 'sky', name: 'Sky Blue', hex: '#8EC5E8' },
 ]
 
 const KEYS: SlotKey[] = ['chest', 'back']
@@ -359,10 +308,8 @@ const colorId = ref('wine')
 const view = ref<View>('front')
 const overKey = ref<SlotKey | null>(null)
 const dragKey = ref<SlotKey | null>(null)
-const copyStatus = ref('')
 
 const svgEl = ref<SVGSVGElement | null>(null)
-const slipEl = ref<HTMLElement | null>(null)
 const inputs: Record<SlotKey, HTMLInputElement | null> = { chest: null, back: null }
 
 const notes = reactive<Record<SlotKey, string>>({ chest: '', back: '' })
@@ -373,6 +320,11 @@ const slots = reactive<Record<SlotKey, Slot>>({
 })
 
 const currentColor = computed(() => COLORS.find((c) => c.id === colorId.value) ?? COLORS[0])
+const activeKey = computed(() => KEYS.find((k) => CFG[k].view === view.value) ?? 'chest')
+const hasDesign = computed(() => {
+    const s = slots[activeKey.value]
+    return !!s.src && !s.sample
+})
 
 function box(k: SlotKey) {
     const s = slots[k]
@@ -386,40 +338,6 @@ function box(k: SlotKey) {
     return { x: s.cx - w / 2, y: s.cy - h / 2, w, h }
 }
 const boxes = computed(() => ({ chest: box('chest'), back: box('back') }))
-
-function tagText(k: SlotKey) {
-    const s = slots[k]
-    if (!s.src) return 'فارغ'
-    return s.sample ? 'مثال' : 'شعارك'
-}
-
-function meta(k: SlotKey) {
-    const s = slots[k]
-    if (!s.src) return { text: 'ارفع ملفًا لرؤيته هنا.', warn: false }
-    if (s.sample) return { text: 'مثال فقط. قم بتحميل شعارك.', warn: false }
-    if (s.vector) return { text: 'ملف متجه. يطبع حادًا في أي حجم.', warn: false }
-    const widthCm = boxes.value[k].w / 3
-    const dpi = Math.round(s.px / (widthCm / 2.54))
-    let text = `${s.px} × ${s.py} بكسل، تقريبًا ${dpi} نقطة في البوصة في هذا الحجم`
-    const low = dpi < 100
-    if (low) text += '. منخفض للطباعة.'
-    return { text, warn: low }
-}
-
-function posLabel(k: SlotKey) {
-    const s = slots[k]
-    return s.preset ? PRESETS[k][s.preset].label : 'موضع مخصص'
-}
-
-function slotLine(k: SlotKey) {
-    const s = slots[k]
-    if (!s.src) return 'لا يوجد'
-    return `${s.name}, ${posLabel(k)}, عرض ${Math.round(boxes.value[k].w / 3)} سم`
-}
-
-const slipText = computed(
-    () => `تصميم هودي\nاللون: ${currentColor.value.name}\nالصدر: ${slotLine('chest')}\nالظهر: ${slotLine('back')}`,
-)
 
 /* ---------- controls ---------- */
 function setInput(k: SlotKey, el: unknown) {
@@ -436,14 +354,66 @@ function choosePreset(k: SlotKey, key: string) {
     view.value = CFG[k].view
 }
 
-function removeLogo(k: SlotKey) {
-    const s = slots[k]
-    s.src = null
-    s.name = ''
-    s.sample = false
-    notes[k] = ''
+/* ---------- download ---------- */
+async function downloadImage() {
+    const svg = svgEl.value
+    const k = activeKey.value
+    if (!svg || !hasDesign.value) return
+
+    try {
+        // Serialize a copy of the visible SVG. Colors are inlined because the
+        // standalone SVG image has no access to the page's CSS variables.
+        const clone = svg.cloneNode(true) as SVGSVGElement
+        clone.querySelectorAll('.sel').forEach((el) => el.remove())
+        clone.removeAttribute('style')
+        clone.setAttribute('width', '800')
+        clone.setAttribute('height', '920')
+
+        const style = document.createElementNS('http://www.w3.org/2000/svg', 'style')
+        style.textContent = `.fabric{fill:${currentColor.value.hex}}`
+        clone.prepend(style)
+
+        const url = enc(new XMLSerializer().serializeToString(clone))
+        const img = new Image()
+        await new Promise<void>((resolve, reject) => {
+            img.onload = () => resolve()
+            img.onerror = () => reject(new Error('load'))
+            img.src = url
+        })
+
+        const canvas = document.createElement('canvas')
+        canvas.width = 800
+        canvas.height = 1070
+        const ctx = canvas.getContext('2d')
+        if (!ctx) throw new Error('canvas')
+        ctx.fillStyle = '#eef0f3'
+        ctx.fillRect(0, 0, canvas.width, canvas.height)
+        ctx.drawImage(img, 0, 0, 800, 920)
+
+        const s = slots[k]
+        const lines = [
+            `الجهة: ${view.value === 'front' ? 'الواجهة' : 'الخلفية'}`,
+            `الموقع: ${s.preset ? PRESETS[k][s.preset].label : 'موضع مخصص'}`,
+            `حجم التصميم: ${s.cm}cm`,
+        ]
+        ctx.fillStyle = '#14181f'
+        ctx.font = '600 28px system-ui, Arial, sans-serif'
+        ctx.direction = 'rtl'
+        ctx.textAlign = 'right'
+        ctx.textBaseline = 'middle'
+        lines.forEach((text, i) => ctx.fillText(text, 760, 950 + i * 44))
+
+        const link = document.createElement('a')
+        link.download = `${CFG[k].view}-hoodie-design.png`
+        link.href = canvas.toDataURL('image/png')
+        link.click()
+        notes[k] = 'تمت عملية التحميل بنجاح.'
+    } catch {
+        notes[k] = 'تعذر تحميل الصورة. حاول مرة أخرى.'
+    }
 }
 
+/* ---------- upload ---------- */
 function onFile(k: SlotKey, e: Event) {
     const input = e.target as HTMLInputElement
     loadFile(k, input.files?.[0])
@@ -495,6 +465,13 @@ function loadFile(k: SlotKey, file?: File) {
     reader.readAsDataURL(file)
 }
 
+function onLogoClick(k: SlotKey, e: MouseEvent) {
+    if (slots[k].sample) {
+        inputs[k]?.click()
+        e.stopPropagation()
+    }
+}
+
 /* ---------- drag and keys on the hoodie ---------- */
 let drag: { k: SlotKey; dx: number; dy: number } | null = null
 
@@ -521,7 +498,7 @@ function moveTo(k: SlotKey, x: number, y: number) {
 }
 
 function onDown(k: SlotKey, e: PointerEvent) {
-    if (e.button > 0) return
+    if (e.button > 0 || slots[k].sample) return
     ;(e.currentTarget as SVGGElement).setPointerCapture(e.pointerId)
     const p = toSvg(e)
     drag = { k, dx: slots[k].cx - p.x, dy: slots[k].cy - p.y }
@@ -551,27 +528,6 @@ function onKey(k: SlotKey, e: KeyboardEvent) {
     else return
     e.preventDefault()
     moveTo(k, slots[k].cx + dx, slots[k].cy + dy)
-}
-
-/* ---------- copy ---------- */
-function selectSlip() {
-    const el = slipEl.value
-    if (!el) return
-    const range = document.createRange()
-    range.selectNodeContents(el)
-    const sel = window.getSelection()
-    sel?.removeAllRanges()
-    sel?.addRange(range)
-    copyStatus.value = 'تم تحديد النص. انسخه من هنا.'
-}
-
-async function copyDetails() {
-    try {
-        await navigator.clipboard.writeText(slipText.value)
-        copyStatus.value = 'تم النسخ.'
-    } catch {
-        selectSlip()
-    }
 }
 </script>
 
@@ -603,11 +559,11 @@ async function copyDetails() {
     font-family: var(--font-body);
     font-size: 15px;
     line-height: 1.45;
-    min-height: 100vh;
-    padding: 22px max(16px, env(safe-area-inset-right, 0px)) 44px max(16px, env(safe-area-inset-left, 0px));
-    display: grid;
-    align-content: start;
-    gap: 20px;
+    height: 100vh;
+    padding-inline: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
     direction: rtl;
 }
 .hb *,
@@ -650,6 +606,8 @@ h1 {
     display: grid;
     gap: 20px;
     grid-template-columns: minmax(0, 1fr);
+    flex: 1 1 auto;
+    overflow: hidden;
 }
 @media (min-width: 860px) {
     .app {
@@ -665,6 +623,8 @@ h1 {
     display: grid;
     gap: 6px;
     min-width: 0;
+    height: 100%;
+    overflow: visible;
 }
 .stage-top {
     display: flex;
@@ -681,7 +641,7 @@ h1 {
     display: block;
     width: 100%;
     height: auto;
-    max-height: 70vh;
+    max-height: 44vh;
     margin: 0 auto;
     transition: --hood 0.35s ease;
 }
@@ -720,11 +680,23 @@ h1 {
     font-size: 12.5px;
     color: var(--muted);
 }
-
+.download-btn {
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 10px;
+    border-radius: 9px;
+    border: 1px solid var(--line);
+    background: var(--accent);
+    color: var(--fg);
+    cursor: pointer;
+    width: 100%;
+}
 .panel {
     display: grid;
     gap: 14px;
     min-width: 0;
+    height: 100%;
+    overflow: auto;
 }
 .card {
     background: var(--surface);
@@ -734,6 +706,7 @@ h1 {
     display: grid;
     gap: 14px;
     min-width: 0;
+    margin-bottom: 16px;
 }
 .card[data-active='true'] {
     border-color: var(--fg);
@@ -761,10 +734,15 @@ h2 {
     color: var(--muted);
 }
 
+.colors-swatches{
+    padding: 5px;
+}
+
 .swatches {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 6px;
+    align-items: center;
 }
 .sw {
     display: grid;
@@ -773,13 +751,13 @@ h2 {
     background: none;
     border: 0;
     padding: 4px 0;
-    font-size: 12px;
+    font-size: 11px;
     color: var(--muted);
     cursor: pointer;
 }
 .chip {
-    width: 40px;
-    height: 40px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     box-shadow: inset 0 0 0 1px rgba(128, 128, 128, 0.4);
 }
@@ -852,6 +830,12 @@ h2 {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    background: none;
+    border: none;
+    padding: 0;
+    text-align: start;
+    cursor: pointer;
+    color: inherit;
 }
 .meta {
     font-family: var(--font-mono);
@@ -918,29 +902,6 @@ input[type='range'] {
     min-height: 1.2em;
     font-size: 12.5px;
     color: var(--warn);
-}
-
-.slip {
-    font-family: var(--font-mono);
-    font-size: 12.5px;
-    white-space: pre-wrap;
-    border: 1px dashed var(--line);
-    border-radius: 10px;
-    padding: 12px;
-    background: var(--bg);
-    margin: 0;
-    user-select: text;
-    overflow-wrap: anywhere;
-}
-.copyrow {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-.status {
-    font-size: 12.5px;
-    color: var(--muted);
 }
 
 @media (prefers-reduced-motion: reduce) {
