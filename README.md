@@ -22,7 +22,7 @@ No installation needed, just open the link and start designing.
 ## 🛠️ Run locally
 
 ```bash
-git clone <your-repo-url>
+git clone [https://github.com/ZohdeWtamimi/outfit](https://github.com/ZohdeWtamimi/outfit)
 cd outfit
 npm install
 npm run dev

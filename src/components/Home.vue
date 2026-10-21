@@ -3,7 +3,7 @@
         <div class="hb">
             <header class="top">
                 <div style="display: flex; align-items: center; gap: 10px; gap: 10px;justify-content: center; margin-top: 10px;">
-                    <h1 style="color: black;font-family: cursive;">Outfit</h1>
+                    <h1 style="color: black; font-family: cursive;">Outfit</h1>
                     <img :src="oImg" style="border-radius: 10px;"  width="40" height="40" alt="Outfit" />
                 </div>
             </header>
